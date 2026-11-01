@@ -3,7 +3,7 @@ import {spawn, spawnSync} from 'node:child_process';
 import {mkdtempSync, writeFileSync, rmSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
-import {makeRain} from './sound.mjs';
+import {RAIN_URL} from './sound.mjs';
 
 // 🧑 "continuous natural and comfortable rain soundtrack for listening when sleeping ... a single script that the user runs"
 const args = process.argv.slice(2);
@@ -15,8 +15,19 @@ if (!args.length && spawnSync('ffplay', ['-version'], {stdio: 'ignore'}).status 
   console.error('Install FFmpeg (ffplay) to play rain, or use --render rain.wav.');
   process.exit(1);
 }
-console.log('Preparing soft stereo rain…');
-const wav = makeRain();
+console.log('Downloading Minecraft rain…');
+let wav;
+try {
+  const response = await fetch(RAIN_URL, {signal: AbortSignal.timeout(120000)});
+  if (!response.ok) throw new Error(`Audio download failed: HTTP ${response.status}`);
+  wav = Buffer.from(await response.arrayBuffer());
+  if (wav.toString('ascii', 0, 4) !== 'RIFF' || wav.toString('ascii', 8, 12) !== 'WAVE') {
+    throw new Error('Downloaded file is not a WAV recording.');
+  }
+} catch (error) {
+  console.error(error.message);
+  process.exit(1);
+}
 if (args.length) {
   writeFileSync(args[1], wav);
 } else {
