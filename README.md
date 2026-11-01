@@ -5,7 +5,8 @@
   - plays until Ctrl+C
   - adjust device volume for comfort
 - export with `./rain.mjs --render rain.wav`
-- mobile page: serve `index.html` and `sound.mjs` together over HTTP
+- [mobile page](https://sichanghe.github.io/rain/)
+  - self-host by serving `index.html` and `sound.mjs` together over HTTP
   - tap Start rain, then use the audio controls and device volume
   - native audio supports phone media controls
   - locked-screen playback and gapless looping depend on the browser
