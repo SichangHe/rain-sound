@@ -12,8 +12,10 @@
   - locked-screen playback and gapless looping depend on the browser
 - sound design
   - `sound.mjs` makes two minutes of stereo rain at 24 kHz
-  - filtered random noise supplies the diffuse rain; quiet decaying impulses supply small drops
-  - slow, shallow swells avoid a static hiss without large changes in volume
+  - a quiet filtered noise bed sits behind irregular, separate surface impacts
+  - concrete uses short broadband taps; leaves use softer, longer patter; water adds brief rising bubble resonances
+  - each impact varies in strength, decay, pitch, and stereo position
+  - slow changes in impact density and background level vary the rain without abrupt swells
   - four-second equal-power overlap smooths the waveform seam
   - fixed random seed makes checks reproducible
   - peak normalization to −1 dBFS leaves digital headroom; actual loudness depends on device volume
