@@ -27,7 +27,7 @@ if (args.length) {
   writeFileSync(file, wav);
   console.log('Rain is playing. Adjust your device volume; press Ctrl+C to stop.');
   const player = spawn('ffplay', ['-nodisp', '-autoexit', '-loglevel', 'error',
-    '-loop', '0', '-af', 'afade=t=in:d=4', file], {stdio: 'inherit'});
+    '-loop', '0', file], {stdio: 'inherit'});
   let stopping = false;
   for (const signal of ['SIGINT', 'SIGTERM']) process.on(signal, () => {
     stopping = true;

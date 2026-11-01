@@ -2,7 +2,7 @@
 (authored by agents unless marked 🧑)
 
 - run `./rain.mjs` with Node.js and FFmpeg installed
-  - plays until Ctrl+C, with a four-second fade-in
+  - plays until Ctrl+C
   - adjust device volume for comfort
 - export with `./rain.mjs --render rain.wav`
 - mobile page: serve `index.html` and `sound.mjs` together over HTTP
