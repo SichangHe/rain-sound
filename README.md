@@ -2,10 +2,11 @@
 (authored by agents unless marked 🧑)
 
 - run `./rain.mjs` with Node.js 18+ and FFmpeg installed
-  - downloads the recording (about 20 MB) once per run, then plays until Ctrl+C
+  - downloads the recording (about 20 MB) on first run into `~/.cache/rain-sound/`, reuses it afterward, then plays until Ctrl+C
   - save one seamless 20-minute WAV with `./rain.mjs --render rain.wav`
 - [mobile page](https://sichanghe.github.io/rain/)
   - tap Start rain, then use device volume
+  - first tap downloads the recording into browser Cache Storage; later visits reuse it
   - locked-screen playback depends on the browser
 - source
   - 🧑 "Maybe use https://www.youtube.com/watch?v=eTeD8DAta4c instead. Use a longer clip and don't have any audible cutoff"

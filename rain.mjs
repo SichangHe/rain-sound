@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import {spawn, spawnSync} from 'node:child_process';
-import {mkdtempSync, writeFileSync, rmSync} from 'node:fs';
-import {tmpdir} from 'node:os';
+import {existsSync, mkdirSync, renameSync, writeFileSync} from 'node:fs';
+import {homedir} from 'node:os';
 import {join} from 'node:path';
 import {RAIN_URL, LOOP, OVERLAP} from './sound.mjs';
 
@@ -17,17 +17,21 @@ for (const tool of args.length ? ['ffmpeg'] : ['ffmpeg', 'ffplay']) {
     process.exit(1);
   }
 }
-console.log('Downloading rain (about 20 MB)…');
-const directory = mkdtempSync(join(tmpdir(), 'rain-'));
+// Keeps the recording in the user cache so later runs reuse it instead of downloading again.
+const directory = join(process.env.XDG_CACHE_HOME || join(homedir(), '.cache'), 'rain-sound');
 const file = join(directory, 'rain.m4a');
-process.on('exit', () => rmSync(directory, {recursive: true, force: true}));
-try {
-  const response = await fetch(RAIN_URL, {signal: AbortSignal.timeout(300000)});
-  if (!response.ok) throw new Error(`Audio download failed: HTTP ${response.status}`);
-  writeFileSync(file, Buffer.from(await response.arrayBuffer()));
-} catch (error) {
-  console.error(error.message);
-  process.exit(1);
+if (!existsSync(file)) {
+  console.log(`Downloading rain (about 20 MB) once to ${file}…`);
+  try {
+    const response = await fetch(RAIN_URL, {signal: AbortSignal.timeout(300000)});
+    if (!response.ok) throw new Error(`Audio download failed: HTTP ${response.status}`);
+    mkdirSync(directory, {recursive: true});
+    writeFileSync(`${file}.part`, Buffer.from(await response.arrayBuffer()));
+    renameSync(`${file}.part`, file);
+  } catch (error) {
+    console.error(error.message);
+    process.exit(1);
+  }
 }
 
 const RATE = 48000, FRAME = 4;
