@@ -111,7 +111,8 @@ if (args.length) {
   const sink = chunk => player.stdin.write(chunk) ? Promise.resolve() : new Promise(r => player.stdin.once('drain', r));
   for (const signal of ['SIGINT', 'SIGTERM']) process.on(signal, () => { player.kill(); process.exit(0); });
   player.on('close', code => process.exit(code ?? 1));
-  await sink(wavHeader(0xffffffff - 36));
+  // Data size 0 makes FFmpeg read until the pipe closes; a finite size ended playback after ~6.2 h with "Invalid PCM packet".
+  await sink(wavHeader(0));
   let pass = decoder();
   await copy(pass, LOOP, sink);
   for (;;) {
